@@ -1,18 +1,18 @@
-const express = require('express');
-const { connectKafka } = require('./config/kafka');
-require('./config/db'); // Initialize DB pool
-require('./config/redis'); // Initialize Redis
+require('./config/db');
+require('./config/redis');
+
+const authRoutes = require('./src/routes/authRoutes');
 
 const app = express();
 
 app.use(express.json());
 
-// Basic health check
+app.use('/api/auth', authRoutes);
+
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'UP', service: 'user-service' });
 });
 
-// Start Kafka Producer
 connectKafka().catch(err => console.error(err));
 
 module.exports = app;
