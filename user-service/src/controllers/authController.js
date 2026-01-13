@@ -64,13 +64,13 @@ const verifyOTP = async (req, res, next) => {
 
     await redisClient.del(key);
 
-    const userResponse = new UserDTO(newUser);
-
     sendSuccess(res, 201, 'User registered successfully', { user: userResponse });
 
   } catch (error) {
     next(error);
   }
 };
+
+
 
 module.exports = { register, verifyOTP };
