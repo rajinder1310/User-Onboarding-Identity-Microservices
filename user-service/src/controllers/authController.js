@@ -6,11 +6,11 @@ const User = require('../models/User');
 const UserDTO = require('../dtos/userDTO');
 const AppError = require('../utils/AppError');
 const { sendSuccess } = require('../utils/responseHandler');
+const { signToken } = require('../utils/jwtUtils');
 
 const register = async (req, res, next) => {
-  try {
+  try {console.log(req.body)
     const { email, password, name } = req.body;
-
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return next(new AppError('Email already registered', 400));
@@ -73,4 +73,41 @@ const verifyOTP = async (req, res, next) => {
 
 
 
-module.exports = { register, verifyOTP };
+const login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ where: { email } });
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return next(new AppError('Incorrect email or password', 401));
+    }
+
+    const token = signToken(user.id);
+
+    const userResponse = new UserDTO(user);
+
+    sendSuccess(res, 200, 'Logged in successfully', {
+      token,
+      user: userResponse
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getProfile = async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.user.id);
+    if (!user) {
+      return next(new AppError('User not found', 404));
+    }
+    const userResponse = new UserDTO(user);
+    sendSuccess(res, 200, 'User profile', { user: userResponse });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { register, verifyOTP, login, getProfile };

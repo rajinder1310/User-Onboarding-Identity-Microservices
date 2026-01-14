@@ -7,6 +7,7 @@ const sequelize = new Sequelize(
   process.env.DB_PASSWORD,
   {
     host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
     dialect: 'postgres',
     logging: false, // Set to console.log to see SQL queries
     pool: {
@@ -23,7 +24,7 @@ const connectDB = async () => {
     await sequelize.authenticate();
     console.log('Sequelize connected to PostgreSQL');
     // Sync models (Safe for dev, use migrations for prod ideally)
-    // await sequelize.sync({ alter: true });
+    await sequelize.sync({ alter: true });
     // User requested not to run "create table" broadly, but Model sync is needed for ORM to work
     // or we assume tables exist. Usually user wants the model properly defined.
     // I will export sequelize instance to be used in models.

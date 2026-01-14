@@ -1,7 +1,9 @@
+const express = require('express');
 require('./config/db');
 require('./config/redis');
+const { connectKafka } = require('./config/kafka');
 
-const authRoutes = require('./src/routes/authRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 

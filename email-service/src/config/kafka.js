@@ -3,8 +3,9 @@ require('dotenv').config();
 
 const kafka = new Kafka({
   clientId: 'email-service',
-  brokers: [process.env.KAFKA_BROKER]
+  brokers: [process.env.KAFKA_BROKER],
 });
+console.log('Email Service Kafka Broker:', process.env.KAFKA_BROKER);
 
 const consumer = kafka.consumer({ groupId: 'email-group' });
 

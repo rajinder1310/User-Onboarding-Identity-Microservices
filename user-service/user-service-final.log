@@ -1,0 +1,93 @@
+
+> user-service@1.0.0 dev
+> nodemon index.js
+
+[33m[nodemon] 3.1.11[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,cjs,json[39m
+[32m[nodemon] starting `node index.js`[39m
+[dotenv@17.2.3] injecting env (10) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+{"level":"WARN","timestamp":"2026-01-13T11:26:40.323Z","logger":"kafkajs","message":"KafkaJS v2.0.0 switched default partitioner. To retain the same partitioning behavior as in previous versions, create the producer with the option \"createPartitioner: Partitioners.LegacyPartitioner\". See the migration guide at https://kafka.js.org/docs/migration-guide-v2.0.0#producer-new-default-partitioner for details. Silence this warning by setting the environment variable \"KAFKAJS_NO_PARTITIONER_WARNING=1\""}
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+User Service running on port 3000
+Connected to Redis
+{"level":"ERROR","timestamp":"2026-01-13T11:26:40.639Z","logger":"kafkajs","message":"[BrokerPool] Closed connection","retryCount":0,"retryTime":297}
+Unable to connect to the database: ConnectionError [SequelizeConnectionError]: password authentication failed for user "user"
+    at Client._connectionCallback (/home/user/Antigravity/User-Onboarding-Identity-Microservices/user-service/node_modules/sequelize/lib/dialects/postgres/connection-manager.js:145:24)
+    at Client._handleErrorWhileConnecting (/home/user/Antigravity/User-Onboarding-Identity-Microservices/user-service/node_modules/pg/lib/client.js:336:19)
+    at Client._handleErrorMessage (/home/user/Antigravity/User-Onboarding-Identity-Microservices/user-service/node_modules/pg/lib/client.js:356:19)
+    at Connection.emit (node:events:518:28)
+    at /home/user/Antigravity/User-Onboarding-Identity-Microservices/user-service/node_modules/pg/lib/connection.js:116:12
+    at Parser.parse (/home/user/Antigravity/User-Onboarding-Identity-Microservices/user-service/node_modules/pg-protocol/dist/parser.js:36:17)
+    at Socket.<anonymous> (/home/user/Antigravity/User-Onboarding-Identity-Microservices/user-service/node_modules/pg-protocol/dist/index.js:11:42)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3) {
+  parent: error: password authentication failed for user "user"
+      at Parser.parseErrorMessage (/home/user/Antigravity/User-Onboarding-Identity-Microservices/user-service/node_modules/pg-protocol/dist/parser.js:285:98)
+      at Parser.handlePacket (/home/user/Antigravity/User-Onboarding-Identity-Microservices/user-service/node_modules/pg-protocol/dist/parser.js:122:29)
+      at Parser.parse (/home/user/Antigravity/User-Onboarding-Identity-Microservices/user-service/node_modules/pg-protocol/dist/parser.js:35:38)
+      at Socket.<anonymous> (/home/user/Antigravity/User-Onboarding-Identity-Microservices/user-service/node_modules/pg-protocol/dist/index.js:11:42)
+      at Socket.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {
+    length: 100,
+    severity: 'FATAL',
+    code: '28P01',
+    detail: undefined,
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: 'auth.c',
+    line: '343',
+    routine: 'auth_failed'
+  },
+  original: error: password authentication failed for user "user"
+      at Parser.parseErrorMessage (/home/user/Antigravity/User-Onboarding-Identity-Microservices/user-service/node_modules/pg-protocol/dist/parser.js:285:98)
+      at Parser.handlePacket (/home/user/Antigravity/User-Onboarding-Identity-Microservices/user-service/node_modules/pg-protocol/dist/parser.js:122:29)
+      at Parser.parse (/home/user/Antigravity/User-Onboarding-Identity-Microservices/user-service/node_modules/pg-protocol/dist/parser.js:35:38)
+      at Socket.<anonymous> (/home/user/Antigravity/User-Onboarding-Identity-Microservices/user-service/node_modules/pg-protocol/dist/index.js:11:42)
+      at Socket.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {
+    length: 100,
+    severity: 'FATAL',
+    code: '28P01',
+    detail: undefined,
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: 'auth.c',
+    line: '343',
+    routine: 'auth_failed'
+  }
+}
+{"level":"ERROR","timestamp":"2026-01-13T11:26:40.939Z","logger":"kafkajs","message":"[BrokerPool] Closed connection","retryCount":1,"retryTime":578}
+{"level":"ERROR","timestamp":"2026-01-13T11:26:41.520Z","logger":"kafkajs","message":"[BrokerPool] Closed connection","retryCount":2,"retryTime":1254}
+{"level":"ERROR","timestamp":"2026-01-13T11:26:42.777Z","logger":"kafkajs","message":"[BrokerPool] Closed connection","retryCount":3,"retryTime":2782}
+Connected to Kafka Producer
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting child process[39m
