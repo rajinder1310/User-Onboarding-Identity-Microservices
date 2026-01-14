@@ -1,6 +1,7 @@
 const { connectConsumer, consumer } = require('./src/config/kafka');
 const { sendEmail } = require('./src/utils/emailSender');
 const logger = require('./src/utils/logger');
+const { getOtpTemplate } = require('./src/templates/otpTemplate');
 require('dotenv').config();
 
 const startService = async () => {
@@ -15,10 +16,11 @@ const startService = async () => {
         logger.info(`Received message: ${msgContent}`);
 
         try {
-          const { email, otp } = JSON.parse(msgContent);
+          const { email, otp, name } = JSON.parse(msgContent); // Added name if available, fallback handled in template
           if (email && otp) {
             logger.info(`Sending OTP to ${email}`);
-            await sendEmail(email, 'Your OTP Code', `Your OTP for registration is: ${otp}`);
+            const htmlContent = getOtpTemplate(otp, name || 'User');
+            await sendEmail(email, 'Verify Your Email - AntiGravity', `Your OTP is ${otp}`, htmlContent);
           } else {
             logger.error('Invalid message format (missing email or otp)');
           }
