@@ -27,4 +27,4 @@ const sendEvent = async (topic, message) => {
   }
 };
 
-module.exports = { connectKafka, sendEvent };
+module.exports = { connectKafka, sendEvent, producer };
