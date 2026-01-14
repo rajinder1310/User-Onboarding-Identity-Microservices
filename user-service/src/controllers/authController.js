@@ -8,9 +8,19 @@ const AppError = require('../utils/AppError');
 const { sendSuccess } = require('../utils/responseHandler');
 const { signToken } = require('../utils/jwtUtils');
 
+/**
+ * Register a new user
+ * 1. Checks if email already exists
+ * 2. Generates an OTP
+ * 3. Hashes the password
+ * 4. Temporarily stores user data in Redis (expires in 5 mins)
+ * 5. Publishes 'send-otp' event to Kafka for email-service
+ */
 const register = async (req, res, next) => {
-  try {console.log(req.body)
+  try {
     const { email, password, name } = req.body;
+
+    // Check if user already exists in DB
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return next(new AppError('Email already registered', 400));
@@ -18,6 +28,7 @@ const register = async (req, res, next) => {
 
     const otp = generateOTP();
 
+    // Hash password before temporary storage
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const userData = {
@@ -27,9 +38,11 @@ const register = async (req, res, next) => {
       otp
     };
 
+    // Store registration data in Redis with 5-minute expiration
     await redisClient.setEx(`registration:${email}`, 300, JSON.stringify(userData));
 
-    await sendEvent('send-otp', { email, otp });
+    // Send event to Kafka topic 'send-otp'
+    await sendEvent('send-otp', { email, otp, name });
 
     sendSuccess(res, 200, 'OTP sent to email. Please verify to complete registration.');
 
@@ -38,6 +51,13 @@ const register = async (req, res, next) => {
   }
 };
 
+/**
+ * Verify OTP and Create User
+ * 1. Retrieves temporary data from Redis using email key
+ * 2. Validates provided OTP against stored OTP
+ * 3. Creates new User record in PostgreSQL
+ * 4. Deletes temporary data from Redis
+ */
 const verifyOTP = async (req, res, next) => {
   try {
     const { email, otp } = req.body;
@@ -55,6 +75,7 @@ const verifyOTP = async (req, res, next) => {
       return next(new AppError('Invalid OTP', 400));
     }
 
+    // Create user in database
     const newUser = await User.create({
       name: userData.name,
       email: userData.email,
@@ -62,7 +83,10 @@ const verifyOTP = async (req, res, next) => {
       is_verified: true
     });
 
+    // Cleanup Redis key
     await redisClient.del(key);
+
+    const userResponse = new UserDTO(newUser);
 
     sendSuccess(res, 201, 'User registered successfully', { user: userResponse });
 
@@ -71,8 +95,12 @@ const verifyOTP = async (req, res, next) => {
   }
 };
 
-
-
+/**
+ * User Login
+ * 1. Finds user by email
+ * 2. Verifies password
+ * 3. Generates JWT token
+ */
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -92,11 +120,18 @@ const login = async (req, res, next) => {
       user: userResponse
     });
 
+    // NOTE: In a real microservice architecture, you might publish a 'user-login' event here
+    // for analytics or security monitoring.
+
   } catch (error) {
     next(error);
   }
 };
 
+/**
+ * Get User Profile
+ * Protected route to get current user details
+ */
 const getProfile = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.user.id);
