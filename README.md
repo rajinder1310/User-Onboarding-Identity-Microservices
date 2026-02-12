@@ -188,9 +188,3 @@ Returns a JWT token for authenticated requests.
     ├── src/
         ├── config/          # Kafka Consumer Config
         ├── utils/           # SendGrid Helper
-        └── ...
-```
-
----
-
-Made with ❤️ by the AntiGravity Team.
